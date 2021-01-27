@@ -84,6 +84,14 @@ ActionBinding::ActionBinding()
     wayToBindActions.insert(std::make_pair(std::string("cycleRadar"), press));
     wayToBindActions.insert(std::make_pair(std::string("cyclePanel"), press));
 
+    wayToBindActions.insert(std::make_pair(std::string("toggleViewMode"), press));
+    wayToBindActions.insert(std::make_pair(std::string("viewHeight up"), press));
+    wayToBindActions.insert(std::make_pair(std::string("viewHeight down"), press));
+    wayToBindActions.insert(std::make_pair(std::string("viewTilt down"), press));
+    wayToBindActions.insert(std::make_pair(std::string("viewTilt up"), press));
+    wayToBindActions.insert(std::make_pair(std::string("viewOffset forward"), press));
+    wayToBindActions.insert(std::make_pair(std::string("viewOffset backward"), press));
+
     wayToBindActions.insert(std::make_pair(std::string("messagepanel all"), press));
     wayToBindActions.insert(std::make_pair(std::string("messagepanel chat"), press));
     wayToBindActions.insert(std::make_pair(std::string("messagepanel server"), press));
@@ -155,6 +163,14 @@ ActionBinding::ActionBinding()
     defaultBinding.insert(BindingTable::value_type("Right Mouse", "restart"));
     defaultBinding.insert(BindingTable::value_type("I", "restart"));
     defaultBinding.insert(BindingTable::value_type("9", "autopilot"));
+
+    defaultBinding.insert(BindingTable::value_type("V", "toggleViewMode"));
+    defaultBinding.insert(BindingTable::value_type("E", "viewHeight up"));
+    defaultBinding.insert(BindingTable::value_type("Ctrl+E", "viewHeight down"));
+    defaultBinding.insert(BindingTable::value_type("D", "viewTilt down"));
+    defaultBinding.insert(BindingTable::value_type("Ctrl+D", "viewTilt up"));
+    defaultBinding.insert(BindingTable::value_type("C", "viewOffset backward"));
+    defaultBinding.insert(BindingTable::value_type("Ctrl+C", "viewOffset forward"));
 
     defaultBinding.insert(BindingTable::value_type("Shift+F1", "messagepanel all"));
     defaultBinding.insert(BindingTable::value_type("Shift+F2", "messagepanel chat"));

@@ -5875,7 +5875,63 @@ void drawFrame(const float dt)
         targetPoint[1] = eyePoint[1] + myTankDir[1];
         targetPoint[2] = eyePoint[2] + myTankDir[2];
 
-        if (devDriving || ROAM.isRoaming())
+        if (BZDB.evalInt("viewMode") == 1)
+        {
+            // adjust height
+            eyePoint[2] += BZDB.eval("viewMode1Height");
+
+            // adjust forward/backward offset
+            const auto viewMode1Offset = BZDB.eval("viewMode1Offset");
+            eyePoint[0] = myTankPos[0] - myTankDir[0] * -viewMode1Offset;
+            eyePoint[1] = myTankPos[1] - myTankDir[1] * -viewMode1Offset;
+
+            // adjust tilt
+            const auto viewMode1Tilt = BZDB.eval("viewMode1Tilt");
+            targetPoint[2] = eyePoint[2] * (1.0f - viewMode1Tilt) + (myTankPos[2] + muzzleHeight + myTankDir[2]) * viewMode1Tilt;
+
+            if(viewMode1Offset <= 0.0f)
+            {
+                // between offset -1.0 and 0.0, fade between looking at +1.0 and looking at the center of the tank
+                const auto smoothMix = std::max(0.0f, std::min(1.0f, 1.0f + viewMode1Offset));
+                targetPoint[0] = myTankPos[0] * (1.0f - smoothMix) + targetPoint[0] * smoothMix;
+                targetPoint[1] = myTankPos[1] * (1.0f - smoothMix) + targetPoint[1] * smoothMix;
+            }
+            else
+            {
+                // in front of the tank, just look forward
+                targetPoint[0] = eyePoint[0] + myTankDir[0];
+                targetPoint[1] = eyePoint[1] + myTankDir[1];
+            }
+        }
+        else if (BZDB.evalInt("viewMode") == 2)
+        {
+            // adjust height
+            eyePoint[2] += BZDB.eval("viewMode2Height");
+
+            // adjust forward/backward offset
+            const auto viewMode2Offset = BZDB.eval("viewMode2Offset");
+            eyePoint[0] = myTankPos[0] - myTankDir[0] * -viewMode2Offset;
+            eyePoint[1] = myTankPos[1] - myTankDir[1] * -viewMode2Offset;
+
+            // adjust tilt
+            const auto viewMode2Tilt = BZDB.eval("viewMode2Tilt");
+            targetPoint[2] = eyePoint[2] * (1.0f - viewMode2Tilt) + (myTankPos[2] + muzzleHeight + myTankDir[2]) * viewMode2Tilt;
+
+            if(viewMode2Offset <= 0.0f)
+            {
+                // between offset -1.0 and 0.0, fade between looking at +1.0 and looking at the center of the tank
+                const auto smoothMix = std::max(0.0f, std::min(1.0f, 1.0f + viewMode2Offset));
+                targetPoint[0] = myTankPos[0] * (1.0f - smoothMix) + targetPoint[0] * smoothMix;
+                targetPoint[1] = myTankPos[1] * (1.0f - smoothMix) + targetPoint[1] * smoothMix;
+            }
+            else
+            {
+                // in front of the tank, just look forward
+                targetPoint[0] = eyePoint[0] + myTankDir[0];
+                targetPoint[1] = eyePoint[1] + myTankDir[1];
+            }
+        }
+        else if (devDriving || ROAM.isRoaming())
         {
             hud->setAltitude(-1.0f);
             float roamViewAngle;

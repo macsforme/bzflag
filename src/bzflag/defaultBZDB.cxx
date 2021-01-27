@@ -122,6 +122,14 @@ DefaultDBItem defaultDBItems[] =
     { "shadows",      "1",            true,   StateDatabase::ReadWrite,   NULL },
     { "stencilShadows",      "1",            true,   StateDatabase::ReadWrite,   NULL },
 
+    { "viewMode",          "1",   true,   StateDatabase::ReadWrite,   NULL },
+    { "viewMode1Height",   "0.0",   true,   StateDatabase::ReadWrite,   NULL },
+    { "viewMode1Tilt",     "0.0",   true,   StateDatabase::ReadWrite,   NULL },
+    { "viewMode1Offset",   "0.0",   true,   StateDatabase::ReadWrite,   NULL },
+    { "viewMode2Height",   "0.0",   true,   StateDatabase::ReadWrite,   NULL },
+    { "viewMode2Tilt",     "0.0",   true,   StateDatabase::ReadWrite,   NULL },
+    { "viewMode2Offset",   "0.0",   true,   StateDatabase::ReadWrite,   NULL },
+
     // roam smooth follow settings
     { "followDist",       "32.0",         true,   StateDatabase::ReadWrite,   NULL },
     { "followHeight",     "8.0",          true,   StateDatabase::ReadWrite,   NULL },

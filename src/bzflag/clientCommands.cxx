@@ -189,6 +189,26 @@ static std::string cmdCycleRadar(const std::string&,
 static std::string cmdCyclePanel(const std::string&,
                                  const CommandManager::ArgList& args, bool*);
 
+/** toggle the view mode
+ */
+static std::string cmdToggleViewMode(const std::string&,
+                                     const CommandManager::ArgList& args, bool*);
+
+/** change the current view height
+ */
+static std::string cmdViewHeight(const std::string&,
+                                 const CommandManager::ArgList& args, bool*);
+
+/** change the current view tilt
+ */
+static std::string cmdViewTilt(const std::string&,
+                               const CommandManager::ArgList& args, bool*);
+
+/** change the current view offset
+ */
+static std::string cmdViewOffset(const std::string&,
+                                 const CommandManager::ArgList& args, bool*);
+
 
 const struct CommandListItem commandList[] =
 {
@@ -220,7 +240,11 @@ const struct CommandListItem commandList[] =
     { "toggleConsole",    &cmdToggleConsole,  "toggleConsole:  toggle console visibility" },
     { "toggleFlags",  &cmdToggleFlags,    "toggleFlags {main|radar}:  turn off/on field radar flags" },
     { "cycleRadar",   &cmdCycleRadar,     "cycleRadar {level1 [level2 ...] [off]}:  cycle to the next radar zoom level" },
-    { "cyclePanel",   &cmdCyclePanel,     "cyclePanel {left[_off]|right[_off]}:  cycle to the previous or next message panel tab" }
+    { "cyclePanel",   &cmdCyclePanel,     "cyclePanel {left[_off]|right[_off]}:  cycle to the previous or next message panel tab" },
+    { "toggleViewMode",   &cmdToggleViewMode,   "toggleViewMode:  toggle view mode" },
+    { "viewHeight",       &cmdViewHeight,       "viewHeight {up|down}:  raise or lower the current view" },
+    { "viewTilt",         &cmdViewTilt,         "viewTilt {up|down|:  increase (up) or decrease (down) the current view angle" },
+    { "viewOffset",       &cmdViewOffset,       "viewOffset {forward|backward}:  move the current view forward or backward" }
 };
 
 
@@ -1147,6 +1171,61 @@ static std::string cmdCyclePanel(const std::string&,
                 BZDB.setBool("displayConsole", false);
         }
     }
+
+    return std::string();
+}
+
+static std::string cmdToggleViewMode(const std::string&,
+                                     const CommandManager::ArgList& UNUSED(args), bool*)
+{
+    BZDB.setInt("viewMode", BZDB.evalInt("viewMode") == 1 ? 2 : 1);
+
+    return std::string();
+}
+
+static std::string cmdViewHeight(const std::string&,
+                                 const CommandManager::ArgList& args, bool*)
+{
+    if (args.size() != 1 || (args[0] != "up" && args[0] != "down"))
+        return "usage: viewHeight {up|down}\n";
+
+    const auto increment = 0.25f;
+
+    // range 0.0f to infinity
+    const auto viewModeSelection = BZDB.evalInt("viewMode") == 1 ? "viewMode1Height" : "viewMode2Height";
+    BZDB.setFloat(viewModeSelection, std::max(0.0f,
+                  BZDB.eval(viewModeSelection) + (args[0] == "up" ? 1.0f : -1.0f) * increment));
+
+    return std::string();
+}
+
+static std::string cmdViewTilt(const std::string&,
+                               const CommandManager::ArgList& args, bool*)
+{
+    if (args.size() != 1 || (args[0] != "up" && args[0] != "down"))
+        return "usage: cmdViewTilt {up|down}\n";
+
+    const auto increment = 0.05f;
+
+    // range 0.0f (straight ahead) to 1.0f (looking at tank)
+    const auto viewModeSelection = BZDB.evalInt("viewMode") == 1 ? "viewMode1Tilt" : "viewMode2Tilt";
+    BZDB.setFloat(viewModeSelection, std::max(0.0f, std::min(1.0f,
+                  BZDB.eval(viewModeSelection) + (args[0] == "down" ? 1.0f : -1.0f) * increment)));
+
+    return std::string();
+}
+
+static std::string cmdViewOffset(const std::string&,
+                                 const CommandManager::ArgList& args, bool*)
+{
+    if (args.size() != 1 || (args[0] != "forward" && args[0] != "backward"))
+        return "usage: cmdViewOffset {forward|backward}\n";
+
+    const auto increment = 0.25f;
+
+    // range -infinity to infinity
+    const auto viewModeSelection = BZDB.evalInt("viewMode") == 1 ? "viewMode1Offset" : "viewMode2Offset";
+    BZDB.setFloat(viewModeSelection, BZDB.eval(viewModeSelection) + (args[0] == "forward" ? 1.0f : -1.0f) * increment);
 
     return std::string();
 }
