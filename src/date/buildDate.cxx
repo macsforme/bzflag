@@ -105,7 +105,7 @@ const char*     getProtocolVersion()
 
 const char*     getServerVersion()
 {
-    static std::string serverVersion = std::string("BZFS") + getProtocolVersion();
+    static std::string serverVersion = std::string("TIMT") + getProtocolVersion();
     return serverVersion.c_str();
 }
 
