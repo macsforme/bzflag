@@ -43,6 +43,10 @@
 #include "HUDRenderer.h"
 #include "HUDui.h"
 
+extern unsigned long int viewMode1Seconds;
+extern unsigned long int viewMode2Seconds;
+extern TimeKeeper currentViewModeStart;
+
 /** jump
  */
 static std::string cmdJump(const std::string&,
@@ -1178,6 +1182,17 @@ static std::string cmdCyclePanel(const std::string&,
 static std::string cmdToggleViewMode(const std::string&,
                                      const CommandManager::ArgList& UNUSED(args), bool*)
 {
+    if(BZDB.evalInt("viewMode") == 1)
+    {
+        viewMode1Seconds += TimeKeeper::getCurrent() - currentViewModeStart;
+        currentViewModeStart = TimeKeeper::getCurrent();
+    }
+    else if(BZDB.evalInt("viewMode") == 2)
+    {
+        viewMode2Seconds += TimeKeeper::getCurrent() - currentViewModeStart;
+        currentViewModeStart = TimeKeeper::getCurrent();
+    }
+
     BZDB.setInt("viewMode", BZDB.evalInt("viewMode") == 1 ? 2 : 1);
 
     return std::string();

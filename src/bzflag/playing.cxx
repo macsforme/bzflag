@@ -140,6 +140,9 @@ static bool     grabMouseAlways = false;
 static FlashClock   pulse;
 static bool     wasRabbit = false;
 static bool     justJoined = false;
+unsigned long int viewMode1Seconds = 0;
+unsigned long int viewMode2Seconds = 0;
+TimeKeeper currentViewModeStart;
 
 int         sentForbidIdentify = 0;
 
@@ -5212,6 +5215,50 @@ static void resetServerVar(const std::string& name, void*)
 
 void        leaveGame()
 {
+    if(entered)
+    {
+        if(BZDB.evalInt("viewMode") == 1)
+            viewMode1Seconds += TimeKeeper::getCurrent() - currentViewModeStart;
+        else if(BZDB.evalInt("viewMode") == 2)
+            viewMode2Seconds += TimeKeeper::getCurrent() - currentViewModeStart;
+
+        int year, month, day, hour, minute, second;
+        TimeKeeper::localTime(&year, &month, &day, &hour, &minute, &second, NULL);
+
+        std::string filename = getConfigDirName() + "viewmodelog-";
+        filename += TextUtils::format("%04d-%02d-%02d_%02d-%02d-%02d", year, month, day, hour, minute, second);
+        filename += ".txt";
+
+        FILE* file = fopen(filename.c_str(), "a+");
+        if (!file)
+            return;
+
+        const time_t nowTime = time (NULL);
+        fprintf(file, "\n------------------------------------------------------------\n");
+        fprintf(file, "View mode usage for game ending at: %s", ctime(&nowTime));
+        fprintf(file, "------------------------------------------------------------\n\n");
+
+        if(viewMode1Seconds + viewMode2Seconds > 0)
+        {
+            fprintf(file, "View mode 1: %lu seconds (%0lu:%02lu:%02lu, %lu%% of time)\n",
+                    viewMode1Seconds,
+                    viewMode1Seconds / 3600,
+                    (viewMode1Seconds % 3600) / 60,
+                    viewMode1Seconds % 60,
+                    viewMode1Seconds * 100 / (viewMode1Seconds + viewMode2Seconds));
+            fprintf(file, "View mode 2: %lu seconds (%0lu:%02lu:%02lu, %lu%% of time)\n",
+                    viewMode2Seconds,
+                    viewMode2Seconds / 3600,
+                    (viewMode2Seconds % 3600) / 60,
+                    viewMode2Seconds % 60,
+                    viewMode2Seconds * 100 / (viewMode1Seconds + viewMode2Seconds));
+        }
+        else
+            fprintf(file, "Entire game lasted less than than one second.\n");
+
+        fclose(file);
+    }
+
     entered = false;
     joiningGame = false;
 
@@ -5526,6 +5573,10 @@ static void joinInternetGame2()
     while (stack->isActive())
         stack->pop();
     joiningGame = false;
+
+    viewMode1Seconds = 0;
+    viewMode2Seconds = 0;
+    currentViewModeStart = TimeKeeper::getCurrent();
 }
 
 
