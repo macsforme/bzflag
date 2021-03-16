@@ -255,33 +255,29 @@ bool          DXJoystick::joystick() const
     return (device != NULL);
 }
 
-void          DXJoystick::getJoy(int& x, int& y)
+void          DXJoystick::getJoy(float& x, float& y)
 {
     if (!device) return;
 
     DIJOYSTATE state = pollDevice();
 
-    if (xAxis == "X")  x = state.lX;
-    else if (xAxis == "Y")  x = state.lY;
-    else if (xAxis == "Z")  x = state.lZ;
-    else if (xAxis == "Rx") x = state.lRx;
-    else if (xAxis == "Ry") x = state.lRy;
-    else if (xAxis == "Rz") x = state.lRz;
-    else if (xAxis == "Slider 1") x = state.rglSlider[0];
-    else if (xAxis == "Slider 2") x = state.rglSlider[1];
+    if (xAxis == "X")  x = float(state.lX) / 1000.0f;
+    else if (xAxis == "Y")  x = float(state.lY) / 1000.0f;
+    else if (xAxis == "Z")  x = float(state.lZ) / 1000.0f;
+    else if (xAxis == "Rx") x = float(state.lRx) / 1000.0f;
+    else if (xAxis == "Ry") x = float(state.lRy) / 1000.0f;
+    else if (xAxis == "Rz") x = float(state.lRz) / 1000.0f;
+    else if (xAxis == "Slider 1") x = float(state.rglSlider[0]) / 1000.0f;
+    else if (xAxis == "Slider 2") x = float(state.rglSlider[1]) / 1000.0f;
 
-    if (yAxis == "X")  y = state.lX;
-    else if (yAxis == "Y")  y = state.lY;
-    else if (yAxis == "Z")  y = state.lZ;
-    else if (yAxis == "Rx") y = state.lRx;
-    else if (yAxis == "Ry") y = state.lRy;
-    else if (yAxis == "Rz") y = state.lRz;
-    else if (yAxis == "Slider 1") y = state.rglSlider[0];
-    else if (yAxis == "Slider 2") y = state.rglSlider[1];
-
-    // ballistics
-    x = (x * abs(x)) / 1000;
-    y = (y * abs(y)) / 1000;
+    if (yAxis == "X")  y = float(state.lX) / 1000.0f;
+    else if (yAxis == "Y")  y = float(state.lY) / 1000.0f;
+    else if (yAxis == "Z")  y = float(state.lZ) / 1000.0f;
+    else if (yAxis == "Rx") y = float(state.lRx) / 1000.0f;
+    else if (yAxis == "Ry") y = float(state.lRy) / 1000.0f;
+    else if (yAxis == "Rz") y = float(state.lRz) / 1000.0f;
+    else if (yAxis == "Slider 1") y = float(state.rglSlider[0]) / 1000.0f;
+    else if (yAxis == "Slider 2") y = float(state.rglSlider[1]) / 1000.0f;
 
     return;
 }
