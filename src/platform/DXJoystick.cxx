@@ -261,23 +261,23 @@ void          DXJoystick::getJoy(float& x, float& y)
 
     DIJOYSTATE state = pollDevice();
 
-    if (xAxis == "X")  x = float(state.lX) / 1000.0f;
-    else if (xAxis == "Y")  x = float(state.lY) / 1000.0f;
-    else if (xAxis == "Z")  x = float(state.lZ) / 1000.0f;
-    else if (xAxis == "Rx") x = float(state.lRx) / 1000.0f;
-    else if (xAxis == "Ry") x = float(state.lRy) / 1000.0f;
-    else if (xAxis == "Rz") x = float(state.lRz) / 1000.0f;
-    else if (xAxis == "Slider 1") x = float(state.rglSlider[0]) / 1000.0f;
-    else if (xAxis == "Slider 2") x = float(state.rglSlider[1]) / 1000.0f;
+    if (xAxis == "X")  x = state.lX / 1000.0f;
+    else if (xAxis == "Y")  x = state.lY / 1000.0f;
+    else if (xAxis == "Z")  x = state.lZ / 1000.0f;
+    else if (xAxis == "Rx") x = state.lRx / 1000.0f;
+    else if (xAxis == "Ry") x = state.lRy / 1000.0f;
+    else if (xAxis == "Rz") x = state.lRz / 1000.0f;
+    else if (xAxis == "Slider 1") x = state.rglSlider[0] / 1000.0f;
+    else if (xAxis == "Slider 2") x = state.rglSlider[1] / 1000.0f;
 
-    if (yAxis == "X")  y = float(state.lX) / 1000.0f;
-    else if (yAxis == "Y")  y = float(state.lY) / 1000.0f;
-    else if (yAxis == "Z")  y = float(state.lZ) / 1000.0f;
-    else if (yAxis == "Rx") y = float(state.lRx) / 1000.0f;
-    else if (yAxis == "Ry") y = float(state.lRy) / 1000.0f;
-    else if (yAxis == "Rz") y = float(state.lRz) / 1000.0f;
-    else if (yAxis == "Slider 1") y = float(state.rglSlider[0]) / 1000.0f;
-    else if (yAxis == "Slider 2") y = float(state.rglSlider[1]) / 1000.0f;
+    if (yAxis == "X")  y = state.lX / 1000.0f;
+    else if (yAxis == "Y")  y = state.lY / 1000.0f;
+    else if (yAxis == "Z")  y = state.lZ / 1000.0f;
+    else if (yAxis == "Rx") y = state.lRx / 1000.0f;
+    else if (yAxis == "Ry") y = state.lRy / 1000.0f;
+    else if (yAxis == "Rz") y = state.lRz / 1000.0f;
+    else if (yAxis == "Slider 1") y = state.rglSlider[0] / 1000.0f;
+    else if (yAxis == "Slider 2") y = state.rglSlider[1] / 1000.0f;
 
     return;
 }
